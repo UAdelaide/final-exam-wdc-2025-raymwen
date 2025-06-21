@@ -10,7 +10,7 @@
 <body class="bg-light">
   <div id="app" class="container py-4">
     <h1 class="mb-4 text-primary">Owner Dashboard</h1>
-
+    <button id="logout" @click="logout">Logout</button>
     <!-- Walk request form -->
     <div class="card mb-4">
       <div class="card-header bg-primary text-white">
@@ -20,7 +20,12 @@
         <form @submit.prevent="submitWalkRequest">
           <div class="mb-3">
             <label class="form-label">Dog ID</label>
-            <input v-model="form.dog_id" type="number" class="form-control" required>
+            <select v-model="form.dog_id" class="form-control" required>
+              <option value="" disabled>Select your dog</option>
+              <option v-for="dog in dogs" :key="dog.dog_id" :value="dog.dog_id">
+                {{ dog.name }}
+              </option>
+            </select>
           </div>
           <div class="mb-3">
             <label class="form-label">Requested Date & Time</label>
@@ -69,13 +74,15 @@
 
     createApp({
       setup() {
+
+        
         const form = ref({
           dog_id: '',
           requested_time: '',
           duration_minutes: '',
           location: ''
         });
-
+        const dogs = ref([]);
         const walks = ref([]);
         const message = ref('');
         const error = ref('');
@@ -115,17 +122,45 @@
           }
         }
 
+        async function loadDogs() {
+          try {
+            const res = await fetch('/owner-dogs');
+            if (!res.ok) throw new Error('Failed to load dogs');
+            dogs.value = await res.json();
+          } catch {
+            error.value = 'Failed to load your dogs';
+          }
+        }
+
         onMounted(() => {
           loadWalks();
+          loadDogs();
         });
 
         return {
           form,
           walks,
+          dogs,
           message,
           error,
           submitWalkRequest
         };
+      }, methods:{
+
+        async logout(){
+          try {
+            const res = await fetch('/logout', { method: 'POST' });
+            if (res.ok) {
+              window.location.href = '/'; // redirect to login form
+            } else {
+              alert('Logout failed.');
+            }
+          } catch (err) {
+            console.error(err);
+            alert('An error occurred.');
+          }
+        }
+        
       }
     }).mount('#app');
   </script>

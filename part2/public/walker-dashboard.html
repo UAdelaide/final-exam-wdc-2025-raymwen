@@ -10,6 +10,7 @@
 <body class="bg-light">
   <div id="app" class="container py-4">
     <h1 class="mb-4 text-success">Walker Dashboard</h1>
+    <button id="logout" @click="logout">Logout</button>
 
     <!-- Alert messages -->
     <div v-if="message" class="alert alert-info">{{ message }}</div>
@@ -84,6 +85,22 @@
           error,
           applyToWalk
         };
+      }, methods:{
+
+        async logout(){
+          try {
+            const res = await fetch('/logout', { method: 'POST' });
+            if (res.ok) {
+              window.location.href = '/'; // redirect to login form
+            } else {
+              alert('Logout failed.');
+            }
+          } catch (err) {
+            console.error(err);
+            alert('An error occurred.');
+          }
+        }
+        
       }
     }).mount('#app');
   </script>
