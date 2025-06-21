@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>DoggoWalkers Ultimate Page</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <style>
+      body {
+        background-color: hsl(0, 0%, 78%);
+        color: #dedddd;
+        font-family: Comic Sans MS;
+      }
+      
+      .button {
+        position: relative;
+        top: 500px;
+        font-size: 24px;
+        background-color: rgb(192, 192, 192);
+      }
+
+      #password{
+        width: 140px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="app">
+
+      <h1>DOGGOWALKS.COM</h1>
+      
+      <div>
+        <p>Welcome. To see the Dog of the Day, enter tthe first 5 digits of pi below and click the fourth button</p>
+        <input id="password">
+        <button class="button" ></button>
+        <button class="button" ></button>
+        <button class="button" ></button>
+        <button class="button" @click="submit"></button>
+        <button class="button" ></button>
+        <button class="button" ></button>
+        <button class="button" ></button>
+        <button class="button" ></button>
+        <button class="button" ></button>
+        <button class="button" ></button>
+      </div>
+      <div id="dog_img"></div>
+    </div>
+
+    <script>
+      Vue.createApp({
+        data() {
+          return {
+          };
+        },
+        methods: {
+          async submit(){
+            input = document.getElementById("password").value;
+            if(input == 3.1415){
+              console.log("success");
+              await this. sendRequest()
+            }else{
+              console.log("incorrect")
+            }
+          },
+          async sendRequest() {
+            try {
+              const response = await fetch('https://dog.ceo/api/breeds/image/random');
+              const data = await response.json();
+              var i = document.createElement("img");
+              i.setAttribute("src", data.message);
+              document.getElementById("dog_img").appendChild(i)
+            } catch (error) {
+              console.error('Request failed', error);
+            }
+          }
+        }
+      }).mount('#app');
+    </script>
+  </body>
+</html>

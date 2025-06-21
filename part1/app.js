@@ -12,6 +12,10 @@ let db;
 async function initDatabase() {
   const sql = fs.readFileSync('dogwalks.sql', 'utf8');
 
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  });
+
   // Step 1: Connect without DB
   const connection = await mysql.createConnection({
     host: 'localhost',
